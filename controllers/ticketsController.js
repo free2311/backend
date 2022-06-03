@@ -35,7 +35,7 @@ exports.createTicket = async (req, res) => {
           } else {
             let id = results.insertId
             req.body["insertId"] = id 
-            res.status(200).json({ status: true, message: "Creacion exitosa", data: [req.body]});
+            return res.status(200).json({ status: true, message: "Creacion exitosa", data: [req.body]});
             /* connection.query("INSERT INTO url_imagenes(id_case) values (?)",[id],(error)=>{
               if(error){
                 console.log(error);
@@ -48,7 +48,7 @@ exports.createTicket = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(401).json({ status: false, message: "Error al crear caso", data: [req.body] });
+    return res.status(500).json({ status: false, message: "Error al crear caso", data: [req.body] });
   }
 };
 
@@ -68,6 +68,7 @@ exports.getTickets = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
   }
 };
 
@@ -86,7 +87,7 @@ exports.update = async (req, res) => {
       async (error, results) => {
         if (error) {
           console.log(error);
-          res.status(404).send("Error de consulta de datos");
+          return res.status(404).send("Error de consulta de datos");
         } else {
           return res
             .status(200)
@@ -100,6 +101,7 @@ exports.update = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
   }
 };
 
@@ -107,27 +109,31 @@ exports.update = async (req, res) => {
 exports.getTicket = async (req, res) => {
   try {
     const id = req.body.id;
-
     connection.execute(
       "select * from cases WHERE id= (?) ",
       [id],
-      async (error, results) => {
+      async (error, results ) => {
         if (error) {
           console.log(error);
           return res.status(404).send("Error de consulta de datos");
         } else {
-          return res
-            .status(200)
-            .json({
-              status: true,
-              message: "Consulta exitosa",
-              data: [results],
-            });
+            if(results != ""){
+              return res.status(200).json({
+                status: true,
+                message: "Consulta exitosa",
+                data: [results],
+              });
+
+          }else{
+            return res.status(404).send("No existe ningun caso asignado con es numero de id");
+          }
+          
         }
       }
     );
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
   }
 };
 
@@ -207,6 +213,7 @@ exports.getlogsbyid = async (req, res) => {
       );
     } catch (error) {
       console.log(error);
+      return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
     }
 };
 
@@ -220,7 +227,7 @@ exports.get_images = async (req, res) => {
       async (error, results, fields) => {
         if (error) {
           console.log(error);
-          return res.status(401).json({ status: false, message: "Error al consultar Datos", data: [req.body] });
+          return res.status(401).json({ status: false, message: error, data: [req.body] });
         } else {
           return res.status(200).json({status: true, message: "Consulta exitosa", data: [results] });
         }
@@ -228,6 +235,7 @@ exports.get_images = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
   }
 };
 
@@ -248,6 +256,7 @@ exports.getNotes = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
   }
 };
 
@@ -275,6 +284,7 @@ exports.postNotes = async (req, res) => {
       })
   } catch (error) {
       console.log(error);
+      return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
   }
   
 }

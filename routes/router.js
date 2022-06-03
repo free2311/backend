@@ -9,5 +9,9 @@ router.post('/login',async (req, res) => {
 router.post('/register',async (req, res) => {
     await authController.register(req,res);
 });
+router.get('/',async (req, res) => {
+    res.json("Hello")
+});
+
 
 module.exports = router;

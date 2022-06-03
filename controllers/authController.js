@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const {promisify} = require('util');
 const connection = require('../database/db');
+const { log } = require('console');
 
 
 
@@ -32,7 +33,8 @@ exports.register = async (req, res)=>{
             
         }   
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        return res.status(500).json({ status: false, message: "Error Del Sistema", data: [req.body] });
     }       
 }
 
@@ -43,14 +45,14 @@ exports.login = async (req, res)=>{
         const user = req.body.user;
         const pass = req.body.pass;
         if(!user || !pass ){
-             res.status(401).json({status: false, message:"Campos sin informacion", data:[req.body]});
+            return res.status(401).json({status: false, message:"Campos sin informacion", data:[req.body]});
         }else{
                 connection.query('SELECT * FROM users WHERE user = (?)', [user], async (error, results)=>{
                 if(error){
                     console.log(err);
                 }
                 if( results.length == 0 || ! (await bcryptjs.compare(pass, results[0].pass)) ){
-                    res.status(401).json({status: false, message:"Usuario y contraseña no coinciden", data:[req.body]});
+                    return res.status(401).json({status: false, message:"Usuario y contraseña no coinciden", data:[req.body]});
                 }else{
                     //inicio de sesión OK
                     const id = results[0].idusers
@@ -60,7 +62,7 @@ exports.login = async (req, res)=>{
                     })
                     let { user, idrol, idclients } = results[0];
                     const info = { user: user, idrol: idrol, idclients: idclients }
-                    await res.status(200).json({status: true, message:"OK", data:[info,token]});
+                    return res.status(200).json({status: true, message:"OK", data:[info,token]});
                    
                 }
             })
@@ -68,6 +70,7 @@ exports.login = async (req, res)=>{
         
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ status: false, message: error.message , data: [req.body] });
         
     }
         
@@ -78,24 +81,28 @@ exports.login = async (req, res)=>{
         
     
 
-// procedimiento  para autenticar usuario
+// procedimiento  para autenticar token
 exports.isAuthenticated = async (req, res, next)=>{
     let token = req.headers['x-access-token'] || req.headers['authorization'];
      if (!token) {
-        res.status('401').send("Es necesario un token de autenticacion")
+        return res.status(401).send("Es necesario un token de autenticacion")
     }
     if(token){
         try {
             token = token.slice(7,token.length)
             const decodificada = await promisify(jwt.verify)(token, process.env.JWT_SECRETO)
-            connection.query('SELECT * FROM users WHERE id = ?', [decodificada.id], (error, results)=>{
-                if(!results){return next()}
-                req.user = results[0]
+            const results = connection.query('SELECT * FROM users WHERE idusers = ?', [decodificada.id]);
+
+            if(!results){ 
+                return res.status(401).json({status: false, message:"Usuario no encontrado", data:[req.body]});
+            }else{
                 return next()
-            })
+            }
+              
+            
         } catch (error) {
-            console.log(error)
-            return next()
+            console.log(error);
+            return res.status(500).json({status: false, message: error.message, data:[req.body]});
         }
     }
 }

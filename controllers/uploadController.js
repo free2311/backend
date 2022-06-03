@@ -134,7 +134,7 @@ exports.generateExcel = async (req, res) => {
             });
             ws.column(1).setWidth(30);
             ws.column(2).setWidth(30);
-            console.log("excel generado");
+            //console.log("excel generado");
             fecha = String(moment().format('lll'))
             
             const buffer = await wb.writeToBuffer();
