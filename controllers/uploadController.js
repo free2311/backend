@@ -12,6 +12,8 @@ AWS.config = new AWS.Config();
 var xl = require('excel4node');
 const path = require('path');
 const { log } = require('console');
+const { resolve } = require('path');
+const { rejects } = require('assert');
 
 const region = process.env.AWS_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY
@@ -35,8 +37,7 @@ const uploadToBucket = async (file,id_creado) =>{
             const params = { Bucket: 'images-tickets-front', Key: file_name, Body: stream, ACL: "public-read" };
             const info = await storage.upload(params).promise();
             let url = info.Location
-            connection.query("INSERT INTO url_imagenes (id_case, url) values  (?,?) ", [ id_creado , url ])
-             
+            connection.query("INSERT INTO url_imagenes (id_case, url) values  (?,?) ", [ id_creado , url ]);
             
         }else{
             for (let index = 0; index < file.length; index++) {
