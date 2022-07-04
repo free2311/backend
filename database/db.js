@@ -16,6 +16,11 @@ connection.connect((error)=>{
         return;
     }
     console.log('Conexion correcta');
+
+
 })
 
+
 module.exports = connection;
+
+

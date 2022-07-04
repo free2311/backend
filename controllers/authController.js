@@ -49,9 +49,10 @@ exports.login = async (req, res)=>{
         }else{
                 connection.query('SELECT * FROM users WHERE user = (?)', [user], async (error, results)=>{
                 if(error){
-                    console.log(err);
+                    console.log(error);
                 }
                 if( results.length == 0 || ! (await bcryptjs.compare(pass, results[0].pass)) ){
+                    
                     return res.status(401).json({status: false, message:"Usuario y contraseña no coinciden", data:[req.body]});
                 }else{
                     //inicio de sesión OK
