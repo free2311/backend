@@ -25,7 +25,7 @@ const storage = new S3( { region, accessKeyId, secretAccessKey})
 
 const uploadToBucket = async (file,id_creado) =>{
     
-    console.log("id para base de datos",id_creado);
+    //console.log("id para base de datos",id_creado);
     try {
 
         if(file.length === undefined){

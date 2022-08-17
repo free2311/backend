@@ -57,7 +57,7 @@ exports.getTickets = async (req, res) => {
   try {
 
     const idclients = req.body.client;
-    console.log(idclients);
+    //console.log(idclients);
 
     connection.execute( "select * from cases WHERE idclients= (?) order by id desc", [idclients], async (error, results, fields) => {
         if (error) {
