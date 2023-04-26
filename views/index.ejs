@@ -9,17 +9,46 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <body>
-    <h1>Bienvenido a mi correo electrónico</h1>
-    <p>Gracias por abrir mi correo electrónico. Para activar la llamada a mi endpoint JavaScript, haga clic en el botón
-        de abajo:</p>
-    <button onclick="callEndpoint()">Activar</button>
+
+    <h1 id="Nombre"> Bienvenido </h1>
+    <p>Su licencia vencera pronto si quiere hacer nuevamente uso de nuestros servicio seleccione el boton Renovar,
+        esperamos que siga contando con nuestros servicios:</p>
+    <button onclick="callEndpoint()">Renovar</button>
     <button onclick="cerrar()">Declinar</button>
     <script>
         var openedWindow;
+        let params = new URLSearchParams(location.search);
+        let id = params.get('id');
+        let body = {
+            "idclientes": id
+
+        }
+        let resultado;
+        axios.post(`http://localhost:3000/getdatos`, body
+        )
+            .then(function (response) {
+                
+                resultado = response
+                console.log("prueba", resultado.data.data[0].Nombre);
+                // Definimos la variable
+                const nombre = resultado.data.data[0].Nombre;
+
+                // Seleccionamos el elemento HTML
+                const saludo = document.querySelector("#Nombre");
+
+                // Concatenamos la variable en el elemento HTML utilizando una plantilla de cadena
+                saludo.textContent = `Bienvenido, ${nombre}!`;
+
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+
+
         async function callEndpoint() {
 
-            let params = new URLSearchParams(location.search);
-            let id = params.get('id');
+
             axios.post(`http://localhost:3000/renovar/${id}`, {
             })
                 .then(function (response) {
@@ -28,7 +57,11 @@
                 .catch(function (error) {
                     console.log(error);
                 })
+
+
         }
+
+
 
         function cerrar() {
             console.log("cerrar");

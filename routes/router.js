@@ -25,6 +25,11 @@ router.get('/viewemail/', async (req, res) => {
 
 });
 
+router.post('/getdatos', async (req, res) => {
+    await authController.getname(req, res);
+  
+
+});
 /************************************** */
 
 router.get('/', async (req, res) => {

@@ -144,13 +144,36 @@ exports.sendSecondEmail = async (req, res, next) => {
 
         const id = req.params.id;
         sendsecondEmail(id)
-        //let [result] = await connection.promise().query('update = (?)', [id])
+        let [result] = await connection.promise().query('UPDATE clientes SET renovacion = 1 where idclientes = ?', [id])
         return res.status(200).json({ status: true, message: "Envio de segundo correo", data: [id] });
 
 
 
     } catch (error) {
         return res.status(200).json({ status: false, message: "error", data: [error.message] });
+    }
+
+
+
+}
+exports.getname = async (req, res, next) => {
+
+    try {
+
+        const id = req.body.idclientes;
+    
+        let [result] = await connection.promise().query('select Nombre from clientes where idclientes = ?', [id]);
+        console.log(result);
+        console.log(id);
+          
+        
+        
+        return res.status(200).json({ status: true, message: "envio exitoso", data: result, id:id });
+
+
+
+    } catch (error) {
+        return res.status(500).json({ status: false, message: "error", data: [error.message] });
     }
 
 
@@ -163,8 +186,8 @@ sendEmail = async (email, id) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'kevinazul999@gmail.com',
-            pass: 'efpcvhxhsrxsrqns'
+            user: 'lanuve@gmail.com',
+            pass: 'ivajkhaiqfwpvjbs'
         }
     });
 
