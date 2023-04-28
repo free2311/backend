@@ -147,14 +147,9 @@ exports.getname = async (req, res, next) => {
     try {
 
         const id = req.body.idclientes;
-    
+
         let [result] = await connection.promise().query('select Nombre from clientes where idclientes = ?', [id]);
-        console.log(result);
-        console.log(id);
-          
-        
-        
-        return res.status(200).json({ status: true, message: "envio exitoso", data: result, id:id });
+        return res.status(200).json({ status: true, message: "envio exitoso", data: result, id: id });
 
 
 
