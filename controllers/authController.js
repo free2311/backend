@@ -80,9 +80,6 @@ exports.login = async (req, res) => {
 
     }
 
-
-
-
 }
 
 // procedimiento  para autenticar token
@@ -102,21 +99,15 @@ exports.isAuthenticated = async (req, res, next) => {
             } else {
                 return next()
             }
-
-
         } catch (error) {
             console.log(error);
             return res.status(500).json({ status: false, message: error.message, data: [req.body] });
         }
     }
 }
-
 exports.getEmail = async (req, res, next) => {
-
     try {
-
-
-        let [result] = await connection.promise().query("select * from clientes where fecha = CURDATE()")
+        let [result] = await connection.promise().query("select * from clientes where fecha = CURDATE()-5")
 
         for (let index = 0; index < result.length; index++) {
 
@@ -127,14 +118,9 @@ exports.getEmail = async (req, res, next) => {
 
         return res.status(200).json({ status: true, message: "OK", data: [result] });
 
-
-
     } catch (error) {
         return res.status(200).json({ status: false, message: "error", data: [error.message] });
     }
-
-
-
 }
 
 /**Enviar segundo correo */
@@ -176,8 +162,6 @@ exports.getname = async (req, res, next) => {
         return res.status(500).json({ status: false, message: "error", data: [error.message] });
     }
 
-
-
 }
 
 sendEmail = async (email, id) => {
@@ -186,8 +170,8 @@ sendEmail = async (email, id) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'lanuve@gmail.com',
-            pass: 'ivajkhaiqfwpvjbs'
+            user: 'tbwjuancho01@hotmail.com',
+            pass: 'JAMC5695259'
         }
     });
 
