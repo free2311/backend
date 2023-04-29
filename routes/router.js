@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
 
 /**Enviar Correos */
 router.get('/sendemail', async (req, res) => {
-    await authController.getEmail(req, res);
+    await authController.sendFirstEmail(req, res);
 });
 
 router.post('/renovar/:id', async (req, res) => {
@@ -27,7 +27,7 @@ router.get('/viewemail/', async (req, res) => {
 
 router.post('/getdatos', async (req, res) => {
     await authController.getname(req, res);
-  
+
 
 });
 /************************************** */

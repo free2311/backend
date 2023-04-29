@@ -8,9 +8,6 @@ const nodemailer = require('nodemailer');
 const generateEmailHtml = require('../utils/generateHtml');
 const generateEmailHtml2 = require('../utils/generateHtml2');
 
-
-
-
 //procedimiento para registrarnos
 exports.register = async (req, res) => {
     try {
@@ -105,23 +102,7 @@ exports.isAuthenticated = async (req, res, next) => {
         }
     }
 }
-exports.getEmail = async (req, res, next) => {
-    try {
-        let [result] = await connection.promise().query("select * from clientes where fecha = CURDATE()-5")
 
-        for (let index = 0; index < result.length; index++) {
-
-            const element = result[index];
-            let response = sendEmail(element.email, element.idclientes)
-
-        }
-
-        return res.status(200).json({ status: true, message: "OK", data: [result] });
-
-    } catch (error) {
-        return res.status(200).json({ status: false, message: "error", data: [error.message] });
-    }
-}
 
 /**Enviar segundo correo */
 exports.sendSecondEmail = async (req, res, next) => {
@@ -165,8 +146,8 @@ sendEmail = async (email, id) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'tbwjuancho01@hotmail.com',
-            pass: 'JAMC5695259'
+            user: '', //Colocar Email Aqui
+            pass: ''// Contraaseña de correo
         }
     });
 
@@ -219,6 +200,24 @@ sendsecondEmail = async (id) => {
             return info
         }
     });
+}
+
+exports.sendFirstEmail = async (req, res, next) => {
+    try {
+        let [result] = await connection.promise().query("select * from clientes where fecha = CURDATE()-5")
+
+        for (let index = 0; index < result.length; index++) {
+
+            const element = result[index];
+            let response = sendEmail(element.email, element.idclientes)
+
+        }
+
+        return res.status(200).json({ status: true, message: "OK", data: [result] });
+
+    } catch (error) {
+        return res.status(200).json({ status: false, message: "error", data: [error.message] });
+    }
 }
 
 
