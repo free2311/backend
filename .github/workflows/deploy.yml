@@ -15,17 +15,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build application
-        run: npm run build
-
       - name: Copy files to EC2 instance
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: '.'
-          target: '/home/ubuntu/my-app/'
+          source: "."
+          target: "/home/ubuntu/my-app/"
 
       - name: Restart server
         uses: appleboy/ssh-action@master
@@ -33,4 +30,4 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script: 'cd /home/ubuntu/my-app && npm install && npm run start'
+          script: "cd /home/ubuntu/my-app && npm install && npm run start"
