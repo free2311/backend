@@ -33,7 +33,7 @@ router.post('/getdatos', async (req, res) => {
 /************************************** */
 
 router.get('/', async (req, res) => {
-    res.json("Api ok")
+    res.json("Welcome api")
 });
 
 
