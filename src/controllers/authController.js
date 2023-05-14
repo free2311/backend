@@ -140,13 +140,13 @@ sendEmail = async (email, id) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: '', //Colocar Email Aqui
-            pass: ''// Contraaseña de correo
+            user: process.env.email ? process.env.email : "", //Colocar Email Aqui
+            pass: process.env.pass ? process.env.pass : ""// Contraaseña de correo
         }
     });
 
     let mailOptions = {
-        from: 'kvillalbanino@gmail.com',
+        from: 'kevinazul999@gmail.com',
         to: email,
         subject: 'Correo de prueba con HTML',
         html: generateEmailHtml(id)
@@ -171,8 +171,8 @@ sendsecondEmail = async (id) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: '',//Colocar Email Aqui
-            pass: ''// Contraaseña de correo
+            user: process.env.email ? process.env.email : "", //Colocar Email Aqui
+            pass: process.env.pass ? process.env.pass : ""// Contraaseña de correo
         }
     });
 
