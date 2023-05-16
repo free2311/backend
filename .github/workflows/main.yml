@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,10 +18,19 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Deploy to EC2 instance
-        run: |
-          ssh -o "StrictHostKeyChecking=no" -i ${{ secrets.EC2_PRIVATE_KEY }} user@ec2-instance 'mkdir -p /path/to/app'
-          scp -o "StrictHostKeyChecking=no" -r ./ user@ec2-instance:/path/to/app
+      - name: Copy files to EC2 instance
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          source: "."
+          target: "/home/ubuntu/my-app/"
 
-          # Puedes ejecutar comandos adicionales en el servidor si es necesario
-          ssh -o "StrictHostKeyChecking=no" -i ${{ secrets.EC2_PRIVATE_KEY }} user@ec2-instance 'cd /path/to/app && npm install && npm start'
+      - name: Restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: "cd /home/ubuntu/my-app && npm install && npm run start"
