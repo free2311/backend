@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
-    "build": "npm install"
+    "build": "babel src --out-dir dist"
   },
   "keywords": [],
   "author": "kevin-juan",
@@ -35,6 +35,9 @@
     "nodemailer": "^6.9.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
     "nodemon": "^2.0.15",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1"
