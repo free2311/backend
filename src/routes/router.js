@@ -20,10 +20,10 @@ router.post('/renovar/:id', async (req, res) => {
     await authController.sendSecondEmail(req, res);
 });
 
-router.get('/viewemail/', async (req, res) => {
+/* router.get('/viewemail/', async (req, res) => {
     res.render("index", { titulo: "inicio EJS" });
 
-});
+}); */
 
 router.post('/getdatos', async (req, res) => {
     await authController.getname(req, res);
