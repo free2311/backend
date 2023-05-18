@@ -110,9 +110,20 @@ exports.sendSecondEmail = async (req, res, next) => {
     try {
 
         const id = req.params.id;
-        sendsecondEmail(id)
-        let [result] = await connection.promise().query('UPDATE clientes SET renovacion = 1 where idclientes = ?', [id])
-        return res.status(200).json({ status: true, message: "Envio de segundo correo", data: [id] });
+
+
+        let [renovacion] = await connection.promise().query("select renovacion from clientes where idclientes = ?", [id])
+
+        if (renovacion[0].renovacion == "1") {
+
+            return res.status(400).json({ status: false, message: "El email ya se encuentra renovado", data: [] });
+
+        } else {
+            sendsecondEmail(id)
+            let [result] = await connection.promise().query('UPDATE clientes SET renovacion = 1 where idclientes = ?', [id])
+            return res.status(200).json({ status: true, message: "Envio de segundo correo", data: [id] });
+        }
+
     } catch (error) {
         return res.status(200).json({ status: false, message: "error", data: [error.message] });
     }
@@ -200,6 +211,9 @@ exports.sendFirstEmail = async (req, res, next) => {
     try {
         let [result] = await connection.promise().query("select * from clientes where fecha = CURDATE()-5")
 
+        if (result.length == 0) {
+            return res.status(400).json({ status: false, message: "No se encontraron emails para ser notificados", data: [] });
+        }
         for (let index = 0; index < result.length; index++) {
 
             const element = result[index];
