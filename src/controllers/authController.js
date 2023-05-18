@@ -137,7 +137,12 @@ exports.getname = async (req, res, next) => {
 
         const id = req.body.idclientes;
         let [result] = await connection.promise().query('select Nombre from clientes where idclientes = ?', [id]);
-        return res.status(200).json({ status: true, message: "envio exitoso", data: result, id: id });
+        if (result.length > 0) {
+            return res.status(200).json({ status: true, message: "envio exitoso", data: result, id: id });
+        }
+
+        return res.status(400).json({ status: false, message: "Error al consultar Información del Usuario", data: [] });
+
 
     } catch (error) {
         return res.status(500).json({ status: false, message: "error", data: [error.message] });
